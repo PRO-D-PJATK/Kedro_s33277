@@ -16,15 +16,26 @@ The data has 569 samples (357 benign, 212 malignant) and 30 numeric features. Th
 
 ## Installation
 
+Python 3.11 or newer is required.
+
 ```bash
 git clone https://github.com/PRO-D-PJATK/Kedro_s33277.git
 cd Kedro_s33277
 python -m venv .venv
-source .venv/Scripts/activate
-pip install -r requirements.txt
 ```
 
-The activation command above is for Git Bash on Windows. On Linux or macOS use `source .venv/bin/activate`.
+Activate the environment:
+
+- Git Bash on Windows: `source .venv/Scripts/activate`
+- PowerShell on Windows: `.venv\Scripts\Activate.ps1`
+- cmd on Windows: `.venv\Scripts\activate.bat`
+- Linux / macOS: `source .venv/bin/activate`
+
+Then install the dependencies:
+
+```bash
+pip install -r requirements.txt
+```
 
 ## How to run
 
