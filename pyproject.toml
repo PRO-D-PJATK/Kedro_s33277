@@ -1,0 +1,44 @@
+[build-system]
+requires = [
+    "setuptools",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+requires-python = ">=3.10"
+name = "thesis_kedro_demo"
+readme = "README.md"
+dynamic = [
+    "version",
+]
+dependencies = [
+    "ipython>=8.10",
+    "jupyterlab>=3.0",
+    "notebook",
+    "kedro~=1.7.0",
+]
+
+[project.scripts]
+thesis-kedro-demo = "thesis_kedro_demo.__main__:main"
+
+[project.entry-points."kedro.hooks"]
+
+[tool.setuptools.dynamic.version]
+attr = "thesis_kedro_demo.__version__"
+
+[tool.setuptools.packages.find]
+where = [
+    "src",
+]
+namespaces = false
+
+[tool.kedro]
+package_name = "thesis_kedro_demo"
+project_name = "thesis_kedro_demo"
+kedro_init_version = "1.7.0"
+tools = "['None']"
+example_pipeline = "False"
+source_dir = "src"
+
+[tool.kedro_telemetry]
+project_id = "abe67cd948a548feaaf43f1c1dcce1a5"

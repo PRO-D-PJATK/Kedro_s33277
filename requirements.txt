@@ -1,0 +1,4 @@
+kedro
+kedro-datasets
+pandas
+scikit-learn
