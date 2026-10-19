@@ -163,3 +163,6 @@ venv.bak/
 
 # mlflow local runs
 mlruns/*
+
+# keep the small raw dataset so kedro run works after cloning
+!data/01_raw/*
