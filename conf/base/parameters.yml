@@ -1,0 +1,15 @@
+# Reproducibility
+random_state: 42
+
+# Data validation (shape checks in validate_raw_data)
+data_validation:
+  expected_rows: 569
+  expected_columns: 32
+
+# Train/test split
+test_size: 0.2
+
+# Model hyperparameters (LogisticRegression)
+model_options:
+  C: 1.0
+  max_iter: 1000

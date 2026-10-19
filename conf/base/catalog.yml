@@ -1,4 +1,44 @@
-# Here you can define all your datasets by using simple YAML syntax.
-#
-# Documentation for this file format can be found in "The Data Catalog"
-# Link: https://docs.kedro.org/en/stable/catalog-data/introduction/#data-catalog
+# ---------- RAW ----------
+# wdbc.csv has NO header row, so we tell pandas not to expect one.
+# Column names are assigned in the validate_raw_data node.
+raw_wdbc:
+  type: pandas.CSVDataset
+  filepath: data/01_raw/wdbc.csv
+  load_args:
+    header: null
+
+# ---------- INTERMEDIATE ----------
+validated_wdbc:
+  type: pandas.CSVDataset
+  filepath: data/02_intermediate/validated_wdbc.csv
+
+cleaned_wdbc:
+  type: pandas.CSVDataset
+  filepath: data/02_intermediate/cleaned_wdbc.csv
+
+# ---------- MODEL INPUT ----------
+X_train:
+  type: pandas.CSVDataset
+  filepath: data/05_model_input/X_train.csv
+
+X_test:
+  type: pandas.CSVDataset
+  filepath: data/05_model_input/X_test.csv
+
+y_train:
+  type: pandas.CSVDataset
+  filepath: data/05_model_input/y_train.csv
+
+y_test:
+  type: pandas.CSVDataset
+  filepath: data/05_model_input/y_test.csv
+
+# ---------- MODEL ----------
+trained_model:
+  type: pickle.PickleDataset
+  filepath: data/06_models/trained_model.pkl
+
+# ---------- REPORTING ----------
+metrics:
+  type: json.JSONDataset
+  filepath: data/08_reporting/metrics.json
