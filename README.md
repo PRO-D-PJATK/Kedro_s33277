@@ -1,101 +1,69 @@
 # thesis_kedro_demo
 
-[![Powered by Kedro](https://img.shields.io/badge/powered_by-kedro-ffc900?logo=kedro)](https://kedro.org)
+A small Kedro project which takes a raw medical dataset and turns it into a trained model using the data catalog, two pipelines and a parameters file.
 
-## Overview
+## What the project does
 
-This is your new Kedro project, which was generated using `kedro 1.7.0`.
+The project predicts whether a breast tumour is malignant or benign. It uses measurements of cell nuclei from the Breast Cancer Wisconsin (Diagnostic) dataset. The pipelines check and clean the raw data, split it into training and test sets, train a logistic regression model and save the evaluation results.
 
-Take a look at the [Kedro documentation](https://docs.kedro.org) to get started.
+## Dataset
 
-## Rules and guidelines
+- **Name:** Breast Cancer Wisconsin (Diagnostic)
+- **Source:** https://archive.ics.uci.edu/dataset/17/breast+cancer+wisconsin+diagnostic
+- **License:** CC BY 4.0, according to the UCI page
 
-In order to get the best out of the template:
+The data has 569 samples (357 benign, 212 malignant) and 30 numeric features. The original file has no header row, so the column names are added in the first node. The file is small, so it is included in the repository as `data/01_raw/wdbc.csv`.
 
-* Don't remove any lines from the `.gitignore` file we provide
-* Make sure your results can be reproduced by following a data engineering convention
-* Don't commit data to your repository
-* Don't commit any credentials or your local configuration to your repository. Keep all your credentials and local configuration in `conf/local/`
+## Installation
 
-## How to install dependencies
-
-Declare any dependencies in `requirements.txt` for `pip` installation.
-
-To install them, run:
-
-```
+```bash
+git clone https://github.com/PRO-D-PJATK/Kedro_s33277.git
+cd Kedro_s33277
+python -m venv .venv
+source .venv/Scripts/activate
 pip install -r requirements.txt
 ```
 
-## How to run your Kedro pipeline
+The activation command above is for Git Bash on Windows. On Linux or macOS use `source .venv/bin/activate`.
 
-You can run your Kedro project with:
+## How to run
 
-```
+```bash
 kedro run
+kedro run --pipelines=data_processing
+kedro run --pipelines=model
 ```
 
-## How to test your Kedro project
+The first command runs everything. The `model` pipeline needs the output of `data_processing`, so run that one first or run the whole project.
 
-Have a look at the file `tests/test_run.py` for instructions on how to write your tests. You can run your tests as follows:
+## Pipelines
 
-```
-pytest
-```
+**data_processing**
+1. `validate_raw_data` checks the shape, missing values and labels and adds the column names.
+2. `clean_data` removes the ID column and duplicates and encodes the diagnosis (malignant = 1, benign = 0).
+3. `split_data` creates a stratified train/test split.
 
-You can configure the coverage threshold in your project's `pyproject.toml` file under the `[tool.coverage.report]` section.
+**model**
+4. `train_model` scales the features and trains a logistic regression.
+5. `evaluate_model` calculates the metrics and saves them to `data/08_reporting/metrics.json`.
 
+## Configuration
 
-## Project dependencies
+All datasets are defined in `conf/base/catalog.yml`, so the node code contains no file paths. The tunable values are in `conf/base/parameters.yml`:
 
-To see and update the dependency requirements for your project use `requirements.txt`. You can install the project requirements with `pip install -r requirements.txt`.
+- `random_state` (seed, default 42)
+- `test_size` (default 0.2)
+- `model_options.C` and `model_options.max_iter` (logistic regression settings)
+- `data_validation` (expected shape of the raw file)
 
-[Further information about project dependencies](https://docs.kedro.org/en/stable/kedro_project_setup/dependencies.html#project-specific-dependencies)
+## Results
 
-## How to work with Kedro and notebooks
+With the default parameters the model reaches an accuracy of 0.965 on 114 test samples. Precision is 0.975, recall is 0.929 and F1 is 0.951. Three malignant tumours were missed and one benign tumour was classified as malignant. The test set is small, so these numbers can change a bit with another split.
 
-> Note: Using `kedro jupyter` or `kedro ipython` to run your notebook provides these variables in scope: `context`, 'session', `catalog`, and `pipelines`.
->
-> Jupyter, JupyterLab, and IPython are already included in the project requirements by default, so once you have run `pip install -r requirements.txt` you will not need to take any extra steps before you use them.
+## Reproducibility
 
-### Jupyter
-To use Jupyter notebooks in your Kedro project, you need to install Jupyter:
-
-```
-pip install jupyter
-```
-
-After installing Jupyter, you can start a local notebook server:
-
-```
-kedro jupyter notebook
-```
-
-### JupyterLab
-To use JupyterLab, you need to install it:
-
-```
-pip install jupyterlab
-```
-
-You can also start JupyterLab:
-
-```
-kedro jupyter lab
-```
-
-### IPython
-And if you want to run an IPython session:
-
-```
-kedro ipython
-```
-
-### How to ignore notebook output cells in `git`
-To automatically strip out all output cell contents before committing to `git`, you can use tools like [`nbstripout`](https://github.com/kynan/nbstripout). For example, you can add a hook in `.git/config` with `nbstripout --install`. This will run `nbstripout` before anything is committed to `git`.
-
-> *Note:* Your output cells will be retained locally.
-
-## Package your Kedro project
-
-[Further information about building project documentation and packaging your project](https://docs.kedro.org/en/stable/deploy/package_a_project/#package-an-entire-kedro-project)
+- Python version: 3.11.3
+- Kedro version: 1.7.0
+- The exact package versions are pinned in `requirements.txt`. To recreate the environment, create a virtual environment and run `pip install -r requirements.txt`.
+- The random seed is stored in `parameters.yml`. Running `kedro run` twice gives the same `metrics.json`.
+- No secrets are used in this project. Local settings would go to `conf/local/`, which Git ignores.
