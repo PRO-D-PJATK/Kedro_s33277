@@ -11,6 +11,7 @@ The project predicts whether a breast tumour is malignant or benign. It uses mea
 - **Name:** Breast Cancer Wisconsin (Diagnostic)
 - **Source:** https://archive.ics.uci.edu/dataset/17/breast+cancer+wisconsin+diagnostic
 - **License:** CC BY 4.0, according to the UCI page
+- **Authors:** W. H. Wolberg, W. N. Street and O. L. Mangasarian (1995), via the UCI Machine Learning Repository
 
 The data has 569 samples (357 benign, 212 malignant) and 30 numeric features. The original file has no header row, so the column names are added in the first node. The file is small, so it is included in the repository as `data/01_raw/wdbc.csv`.
 
